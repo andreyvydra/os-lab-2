@@ -9,7 +9,7 @@
 #include <string>
 #include "cache.hpp"
 
-constexpr size_t FILE_SIZE = 1024 * 1024;
+constexpr size_t FILE_SIZE = 1024 * 1024 * 1;
 
 void run_benchmark(const std::string& file_path, int iterations, bool use_cache) {
     std::vector<char> buffer(BLOCK_SIZE, 'A');
@@ -54,7 +54,7 @@ void run_benchmark(const std::string& file_path, int iterations, bool use_cache)
                 std::cerr << "Error opening file for IO benchmark!" << std::endl;
                 return;
             }
-
+            
             for (size_t written = 0; written < FILE_SIZE; written += BLOCK_SIZE) {
                 SSIZE_T ret = lab2_write(fd, buffer.data(), BLOCK_SIZE);
                 if (ret != static_cast<SSIZE_T>(BLOCK_SIZE)) {
@@ -64,7 +64,6 @@ void run_benchmark(const std::string& file_path, int iterations, bool use_cache)
                 }
             }
 
-            lab2_fsync(fd);
             lab2_close(fd);
         } else {
             // Открываем файл для записи

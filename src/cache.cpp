@@ -249,9 +249,16 @@ SSIZE_T lab2_write(const HANDLE file_handle, const void* buf, const size_t count
         auto cache_it = cache_table.find(key);
         CacheBlock* block_ptr = nullptr;
 
+
         if (cache_it != cache_table.end()) {
             cache_hits++;
             block_ptr = &cache_it->second;
+
+            if (std::memcmp(block_ptr->data + block_offset, buffer + bytes_written, to_write) != 0) {
+                std::memcpy(block_ptr->data + block_offset, buffer + bytes_written, to_write);
+                block_ptr->is_dirty = true;
+            }
+
             block_ptr->was_accessed = true;
         } else {
             cache_misses++;
@@ -261,6 +268,10 @@ SSIZE_T lab2_write(const HANDLE file_handle, const void* buf, const size_t count
             }
 
             char* aligned_buf = allocate_aligned_buffer();
+            if (!aligned_buf) {
+                return -1;
+            }
+
             LARGE_INTEGER read_offset;
             read_offset.QuadPart = block_id * BLOCK_SIZE;
 
@@ -279,11 +290,11 @@ SSIZE_T lab2_write(const HANDLE file_handle, const void* buf, const size_t count
             CacheBlock& block = cache_table[key] = { aligned_buf, false, true };
             cache_order.push_back(key);
             block_ptr = &block;
+
+            std::memcpy(block_ptr->data + block_offset, buffer + bytes_written, to_write);
+            block_ptr->is_dirty = true; // Помечаем блок как "грязный"
         }
-
-        std::memcpy(block_ptr->data + block_offset, buffer + bytes_written, to_write);
-        block_ptr->is_dirty = true;
-
+        
         offset.QuadPart += to_write;
         bytes_written += to_write;
     }

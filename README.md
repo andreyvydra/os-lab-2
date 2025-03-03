@@ -91,18 +91,18 @@ Cache misses: 266
 
 ```bash
 Overall Stats:
-Average write latency: 0.0146474 seconds
-Minimum write latency: 0.0108658 seconds
-Maximum write latency: 0.0209962 seconds
+Average write latency: 0.0291669 seconds
+Minimum write latency: 0.0113648 seconds
+Maximum write latency: 0.0398694 seconds
 ```
 
 Запись на диск с использованием кэша (10 итераций)
 
 ```bash
 Overall Stats:
-Average write latency: 0.0147094 seconds
-Minimum write latency: 0.0109497 seconds
-Maximum write latency: 0.019756 seconds
+Average write latency: 0.00457321 seconds
+Minimum write latency: 0.0006564 seconds
+Maximum write latency: 0.0374397 seconds
 
 Cache hits: 2304
 Cache misses: 256
